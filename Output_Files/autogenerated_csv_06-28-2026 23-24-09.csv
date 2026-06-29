@@ -1,0 +1,200 @@
+TS-001 Validate monthly unattended happy path where UiPath Orchestrator triggers PROC_ESAR_Monthly, reads Employees.xlsx from ast_ESAR_SourceFolderPath, processes valid Employees worksheet rows, generates HighSalaryEmployees.xlsx, ExecutionSummary_{RunId}.xlsx and ExceptionLog_{RunId}.xlsx, sends success email, and archives artifacts
+TS-002 Validate happy path where valid non-duplicate employee records with Salary greater than ast_ESAR_SalaryThreshold 50000 are included in HighSalaryEmployees.xlsx with columns EmployeeID, Name, Department, and Salary only
+TS-003 Validate happy path where valid records with Salary less than 50000 are processed as non-qualifying without exception logging and excluded from HighSalaryEmployees.xlsx
+TS-004 Validate happy path where valid records with Salary greater than 50000 across 5000 to 10000 rows complete within RuntimeTimeoutSeconds 120 and final status is Success
+TS-005 Validate happy path where AttachReportToEmail is True and success email includes HighSalaryEmployees.xlsx attachment sent to ast_ESAR_SuccessRecipients with configured EmailSubjectPrefix
+TS-006 Validate happy path where AttachReportToEmail is False and success email includes output location reference instead of report attachment
+TS-007 Validate happy path where input workbook contains optional Designation and index columns and automation ignores them while processing mandatory columns only
+TS-008 Validate happy path where no employees satisfy Salary greater than 50000 and automation completes with Execution Summary generated, no exception log entries for non-qualifying rows, and appropriate business output file handling
+TS-009 Validate happy path where blank rows are present with valid data rows and wf_PreprocessDataset removes or ignores blank rows while valid rows continue through REFramework transactions
+TS-010 Validate input validation VR-001 and FR-002 when Employees.xlsx is absent in SourceFolderPath and wf_ValidateInputFile raises SE_InputFileMissing with Failure status
+TS-011 Validate input validation VR-002 and FR-003 when Employees.xlsx exists but robot lacks read permission and wf_ValidateInputFile raises SE_InputFileInaccessible
+TS-012 Validate input validation VR-003 BR-017 and FR-004 when source file extension is not .xlsx and process rejects the file with SE_InvalidFileFormat
+TS-013 Validate input validation VR-004 BR-016 and FR-005 when source file name differs from Employees.xlsx and file naming validation fails during Init
+TS-014 Validate input validation VR-005 and FR-006 when expected worksheet Employees is missing and wf_ValidateWorkbookStructure raises SE_WorksheetMissing
+TS-015 Validate input validation VR-006 and FR-007 when EmployeeID column is missing from worksheet headers and process terminates with SE_RequiredColumnsMissing
+TS-016 Validate input validation VR-006 and FR-007 when Name column is missing from worksheet headers and process terminates with SE_RequiredColumnsMissing
+TS-017 Validate input validation VR-006 and FR-007 when Department column is missing from worksheet headers and process terminates with SE_RequiredColumnsMissing
+TS-018 Validate input validation VR-006 and FR-007 when Salary column is missing from worksheet headers and process terminates with SE_RequiredColumnsMissing
+TS-019 Validate input validation VR-006 and FR-007 when HireDate column is missing from worksheet headers and process terminates with SE_RequiredColumnsMissing
+TS-020 Validate input validation VR-008 BR-001 and FR-010 when EmployeeID is blank or null and record is logged as BE_MandatoryEmployeeIDMissing and excluded from output
+TS-021 Validate input validation VR-009 BR-002 and FR-011 when Name is blank or null and record is logged as BE_MandatoryNameMissing and excluded from output
+TS-022 Validate input validation VR-010 BR-003 and FR-012 when Department is blank or null and record is logged as BE_MandatoryDepartmentMissing and excluded from output
+TS-023 Validate input validation VR-011 BR-004 and FR-013 when Salary is blank or null and record is logged as BE_MandatorySalaryMissing and excluded from output
+TS-024 Validate input validation for HireDate blank or null and record fails BR-011 VR-014 validation and is logged as BE_InvalidHireDate
+TS-025 Validate business rule BR-001 that EmployeeID is mandatory for every valid employee record
+TS-026 Validate business rule BR-002 that Name is mandatory for every valid employee record
+TS-027 Validate business rule BR-003 that Department is mandatory for every valid employee record
+TS-028 Validate business rule BR-004 that Salary is mandatory for every valid employee record
+TS-029 Validate business rule BR-005 that Salary shall be numeric for a record to be valid
+TS-030 Validate business rule BR-006 that Salary shall be greater than zero for a record to be valid
+TS-031 Validate business rule BR-007 FR-017 and VR-016 that only records with Salary strictly greater than 50000 qualify for report inclusion
+TS-032 Validate business rule BR-008 that Salary exactly equal to 50000 is excluded from qualified output
+TS-033 Validate business rule BR-009 that final report contains only records satisfying salary qualification and all applicable validations
+TS-034 Validate business rule BR-010 that duplicate EmployeeID values are not accepted as standard valid records and are logged for review
+TS-035 Validate business rule BR-011 that HireDate must be a valid date for the record to pass validation
+TS-036 Validate business rule BR-012 VR-007 and FR-009 that blank rows are ignored and not processed as employee records
+TS-037 Validate business rule BR-013 that invalid records are written to the exception log with reason details
+TS-038 Validate business rule BR-014 that processing date, StartTime, EndTime, and execution timestamps are captured for each run
+TS-039 Validate business rule BR-015 that all file-level and record-level exceptions are logged with run context
+TS-040 Validate business rule BR-016 that input file name must be Employees.xlsx unless approved naming convention changes
+TS-041 Validate business rule BR-017 that only .xlsx files are processed and all other file formats remain out of scope
+TS-042 Validate business rule BR-018 that only a single expected worksheet is processed in current scope
+TS-043 Validate business rule BR-019 that initial salary threshold is fixed at 50000 from ast_ESAR_SalaryThreshold configuration
+TS-044 Validate business rule BR-020 that input, output, and processing logs are archived for audit purposes
+TS-045 Validate business rule BR-021 VR-018 and FR-019 that output report columns are limited to EmployeeID, Name, Department, and Salary
+TS-046 Validate business rule BR-022 VR-021 and FR-030 that all duplicate EmployeeID records are excluded from final qualified output until policy changes
+TS-047 Validate business rule BR-023 and FR-024 that final status is Partial Success when output is generated and non-critical record exceptions exist
+TS-048 Validate data validation VR-012 and FR-013 when Salary contains alphabetic characters and record is logged as BE_SalaryNonNumeric
+TS-049 Validate data validation when Salary contains alphanumeric mixed value and record is logged as BE_SalaryNonNumeric
+TS-050 Validate data validation when Salary contains decimal numeric value greater than zero and threshold rule evaluation still works correctly
+TS-051 Validate data validation VR-013 and FR-014 when Salary is zero and record is logged as BE_SalaryNonPositive
+TS-052 Validate data validation VR-013 and FR-014 when Salary is negative and record is logged as BE_SalaryNonPositive
+TS-053 Validate data validation for Salary with leading and trailing spaces that can be parsed as numeric and processed correctly
+TS-054 Validate data validation VR-014 and FR-015 when HireDate contains invalid calendar date and record is logged as BE_InvalidHireDate
+TS-055 Validate data validation when HireDate is in configured sample format yyyy-MM-dd and record passes validation
+TS-056 Validate data validation when HireDate is valid Excel date serial and automation correctly interprets it as a valid date
+TS-057 Validate data validation when EmployeeID appears as numeric identifier and duplicate detection still uses the normalized EmployeeID value
+TS-058 Validate data validation when EmployeeID appears as text alphanumeric identifier and duplicate detection works correctly
+TS-059 Validate data validation for boundary Salary value 50000.01 to ensure qualification as greater than threshold
+TS-060 Validate data validation for boundary Salary value 49999.99 to ensure non-qualification without exception logging
+TS-061 Validate exception handling EX-001 and SE_InputFileMissing where missing input file stops processing, logs error, sends failure notification, and avoids record-level analysis
+TS-062 Validate exception handling EX-002 and SE_InputFileInaccessible where inaccessible input file stops processing and notifies Support Team after retry policy if transient symptoms are detected
+TS-063 Validate exception handling EX-003 and SE_InvalidFileFormat where non-xlsx source file is rejected, logged, and failure email is sent
+TS-064 Validate exception handling for SE_WorkbookCorrupted when workbook open/read fails due to corruption and process ends with Failure status
+TS-065 Validate exception handling EX-004 and SE_WorksheetMissing where expected Employees worksheet absence causes critical exception and stop in Init state
+TS-066 Validate exception handling EX-005 and SE_RequiredColumnsMissing where missing mandatory headers terminate processing before DataTable load completes
+TS-067 Validate exception handling EX-006 and BE_BlankRowIgnored where entire blank row is ignored without creating exception log entry
+TS-068 Validate exception handling EX-007 where missing EmployeeID in a non-blank row creates business exception and processing continues for remaining rows
+TS-069 Validate exception handling EX-007 where missing Name in a non-blank row creates business exception and processing continues for remaining rows
+TS-070 Validate exception handling EX-007 where missing Department in a non-blank row creates business exception and processing continues for remaining rows
+TS-071 Validate exception handling EX-008 where Salary is blank and record is logged as business exception and excluded from qualification logic
+TS-072 Validate exception handling EX-008 where Salary is non-numeric and record is logged as business exception and excluded from qualification logic
+TS-073 Validate exception handling EX-009 where Salary is less than or equal to zero and invalid record is logged and excluded from output
+TS-074 Validate exception handling EX-010 where invalid HireDate is logged as business exception and record is excluded while process continues
+TS-075 Validate exception handling EX-011 and BE_DuplicateEmployeeID where duplicate EmployeeID rows are logged and all duplicate occurrences are excluded from output
+TS-076 Validate exception handling EX-012 and SE_UnhandledRuntimeException when unexpected runtime error occurs during transaction processing and REFramework applies transaction retry logic
+TS-077 Validate exception handling EX-013 and SE_EmailNotificationFailure where Outlook send failure is retried up to ast_ESAR_MaxEmailRetryCount and escalated if unresolved
+TS-078 Validate exception handling EX-014 and SE_ArchiveFailure where archive copy failure is retried and original artifacts are preserved for recovery
+TS-079 Validate exception handling EX-015 where critical failure after correction allows Support Team to rerun process and trace rerun to original failed run ID
+TS-080 Validate negative scenario where unauthorized source file name pattern is placed in source folder and process rejects it due to BR-016 naming rule
+TS-081 Validate negative scenario where workbook contains additional irrelevant worksheets and process still limits scope to expected Employees worksheet only
+TS-082 Validate negative scenario where row has all mandatory fields valid but Salary equals 50000 and record is excluded from report as non-qualifying
+TS-083 Validate negative scenario where row has valid data but Salary less than threshold and record is not written to exception log or report
+TS-084 Validate negative scenario where duplicate EmployeeID appears with different Salary values and both rows are excluded pending duplicate policy
+TS-085 Validate negative scenario where duplicate EmployeeID appears once qualifying and once non-qualifying and both rows are excluded from final report
+TS-086 Validate negative scenario where output generation path is invalid and process handles SE_OutputGenerationFailure according to retry strategy
+TS-087 Validate negative scenario where execution summary path is invalid and process handles SE_SummaryGenerationFailure according to retry strategy
+TS-088 Validate negative scenario where exception log path is invalid and process handles SE_ExceptionLogWriteFailure according to retry strategy
+TS-089 Validate negative scenario where config value for WorksheetName does not match workbook sheet and process fails with workbook structure validation error
+TS-090 Validate negative scenario where SourceFolderPath asset points to non-existent location and InitAllApplications fails with configuration-driven file access error
+TS-091 Validate security control that cred_ESAR_OutlookMailbox is retrieved from Orchestrator asset and not hardcoded in Main.xaml or wf_SendStatusEmail.xaml
+TS-092 Validate security control that cred_ESAR_FileShareAccess is stored securely in Orchestrator asset or approved credential manager and not exposed in logs
+TS-093 Validate security control that unattended robot runs under dedicated least-privilege service account with only designated source/output/archive access
+TS-094 Validate security control that unauthorized user cannot access HighSalaryEmployees.xlsx in output folder due to role-based access controls
+TS-095 Validate security control that unauthorized user cannot access ExceptionLog_{RunId}.xlsx containing sensitive HR data
+TS-096 Validate security control that unauthorized user cannot modify or delete archived input, output, or logs in archive repository
+TS-097 Validate security control that Orchestrator roles separate developer, operator, and business viewer permissions for ESAR process folder
+TS-098 Validate security control that success and failure email recipient lists are limited to business-approved addresses from ast_ESAR_SuccessRecipients and ast_ESAR_FailureRecipients
+TS-099 Validate security control that full Salary values and RawRecordSnapshot details are not unnecessarily exposed in Orchestrator logs per logging strategy
+TS-100 Validate security control that reports and exception logs inherit secured folder permissions and encryption-at-rest policies where applicable
+TS-101 Validate security control that email transmission of report attachments complies with mailbox controls and authorized distribution only
+TS-102 Validate security control that audit record access is restricted to authorized HR Operations, Support Team, and auditors only
+TS-103 Validate logging checkpoint for process start and run ID creation using configured log format [ProcessName]|[RunId]|[Workflow]|[TransactionKey]|[Status]|[Message]
+TS-104 Validate logging checkpoint for Config.xlsx and Orchestrator asset load completion in InitAllSettings.xaml
+TS-105 Validate logging checkpoint for source path resolution by wf_ResolveFilePaths.xaml with RunId context
+TS-106 Validate logging checkpoint for file validation start and completion results in wf_ValidateInputFile.xaml
+TS-107 Validate logging checkpoint for workbook structure validation results in wf_ValidateWorkbookStructure.xaml
+TS-108 Validate logging checkpoint for record load counts after wf_LoadEmployeeData.xaml reads Employees worksheet into DataTable
+TS-109 Validate logging checkpoint for blank row count generated by wf_PreprocessDataset.xaml
+TS-110 Validate logging checkpoint for duplicate set creation count from wf_BuildDuplicateLookup or duplicate preparation logic
+TS-111 Validate logging checkpoint for per-transaction validation outcome in Process.xaml and SetTransactionStatus.xaml using EmployeeID as TransactionKey when available
+TS-112 Validate logging checkpoint for qualified row count increments when wf_AddToQualifiedDataset.xaml appends qualifying rows
+TS-113 Validate logging checkpoint for business exception rows with BusinessStatus Invalid or Duplicate and ExceptionType Business
+TS-114 Validate logging checkpoint for non-qualifying valid rows with BusinessStatus NonQualified without error severity
+TS-115 Validate logging checkpoint for output generation completion after wf_GenerateOutputReport.xaml
+TS-116 Validate logging checkpoint for execution summary creation after wf_GenerateExecutionSummary.xaml
+TS-117 Validate logging checkpoint for exception log creation after wf_WriteExceptionLog.xaml
+TS-118 Validate logging checkpoint for email send attempt, retry attempts, and final NotificationStatus in audit log
+TS-119 Validate logging checkpoint for archive attempt, retry attempts, and final ArchiveStatus in audit log
+TS-120 Validate logging checkpoint for final status and execution duration published to Orchestrator logs at process end
+TS-121 Validate logging level usage where Info is used for normal milestones, Warn for invalid or duplicate rows and retry attempts, and Error for critical failures
+TS-122 Validate reporting requirement that HighSalaryEmployees.xlsx is generated with correct file name in ast_ESAR_OutputFolderPath
+TS-123 Validate reporting requirement that HighSalaryEmployees.xlsx contains only EmployeeID, Name, Department, and Salary columns in defined order
+TS-124 Validate reporting requirement that report includes all and only valid non-duplicate employees with Salary greater than 50000
+TS-125 Validate reporting requirement that Execution Summary includes RunId, ProcessingDate, StartTime, EndTime, DurationSeconds, TotalRowsRead, BlankRowsIgnored, QualifiedCount, InvalidCount, DuplicateCount, ExceptionCount, and FinalStatus
+TS-126 Validate reporting requirement that Exception Log captures ExceptionReason, ExceptionType, RawRecordSnapshot, timestamp, and run context for invalid and duplicate records
+TS-127 Validate reporting requirement that success notification email is issued for Success status and includes summary details and configured attachment or link behavior
+TS-128 Validate reporting requirement that partial success notification email is issued for Partial Success status when output is generated with record-level exceptions
+TS-129 Validate reporting requirement that failure notification email is issued for Failure status when critical processing issues prevent completion
+TS-130 Validate reporting requirement that archived artifacts include source input file, generated report, execution summary, exception log, and relevant audit logs under run-specific archive folder
+TS-131 Validate reporting accuracy where QualifiedCount, InvalidCount, DuplicateCount, ExceptionCount, and BlankRowsIgnored in execution summary reconcile with input rows and generated artifacts
+TS-132 Validate end-to-end process from HRMS file handoff through Orchestrator trigger, REFramework processing, report delivery to HR Manager and Department Heads, and archival completion
+TS-133 Validate end-to-end process with mixed valid, invalid, duplicate, blank, qualifying, and non-qualifying rows resulting in Partial Success with correct report, summary, and exception outputs
+TS-134 Validate end-to-end process where no record-level exceptions occur and final status is Success with all checkpoints completed
+TS-135 Validate end-to-end process where critical file-level validation fails and final status is Failure with failure email and no output report generation
+TS-136 Validate end-to-end manual support rerun flow where corrected Employees.xlsx is provided after failure and authorized support user starts rerun from Orchestrator
+TS-137 Validate end-to-end deployment configuration where DEV, UAT, and PROD use environment-specific assets, recipients, and paths without cross-environment leakage
+TS-138 Validate end-to-end audit traceability linking source Employees.xlsx, RunId, HighSalaryEmployees.xlsx, ExecutionSummary_{RunId}.xlsx, ExceptionLog_{RunId}.xlsx, and archive location
+TS-139 Validate system failure scenario SE_ConfigLoadFailure when Config.xlsx or assets are unavailable during Init and initialization retry occurs once before failing run
+TS-140 Validate system failure scenario where Orchestrator asset retrieval fails for ast_ESAR_SourceFolderPath and process logs configuration initialization error
+TS-141 Validate system failure scenario where Orchestrator platform or robot identity issue prevents process startup and job failure is visible in Orchestrator monitoring
+TS-142 Validate system failure scenario where temporary file lock or network issue prevents source file access and retry occurs twice with 1 minute delay before failure
+TS-143 Validate system failure scenario SE_DataReadFailure where workbook read unexpectedly fails and read retry occurs once before final failure
+TS-144 Validate system failure scenario SE_OutputGenerationFailure where HighSalaryEmployees.xlsx cannot be written and process retries once after path revalidation
+TS-145 Validate system failure scenario SE_SummaryGenerationFailure where execution summary cannot be written and process retries once before failure determination
+TS-146 Validate system failure scenario SE_ExceptionLogWriteFailure where exception log cannot be written and process retries once before escalation
+TS-147 Validate system failure scenario SE_EmailNotificationFailure where Outlook connectivity or mailbox profile issue prevents sending and retry sequence executes
+TS-148 Validate system failure scenario SE_ArchiveFailure where archive repository is unavailable and retry sequence executes while preserving original artifact paths
+TS-149 Validate system failure scenario SE_UnhandledRuntimeException during End Process and verify final status logic reflects inability to complete core closure steps
+TS-150 Validate monitoring alert trigger when job exceeds expected runtime threshold of 2 minutes for 10000 plus rows
+TS-151 Validate recovery scenario where transient source file access issue resolves on second retry and processing continues to completion without manual intervention
+TS-152 Validate recovery scenario where transient output path issue resolves on retry and HighSalaryEmployees.xlsx is successfully generated on second attempt
+TS-153 Validate recovery scenario where transient email issue resolves within ast_ESAR_MaxEmailRetryCount and NotificationStatus is updated to Sent
+TS-154 Validate recovery scenario where transient archive issue resolves within retry limit and ArchiveStatus is updated to Completed
+TS-155 Validate recovery scenario where transaction-level system exception in Process.xaml succeeds on REFramework retry and row is processed correctly once
+TS-156 Validate recovery scenario where failed run due to corrected source data is rerun as a new RunId while referencing the original failed run ID in logs where feasible
+TS-157 Validate recovery scenario where archive failure does not destroy already created business outputs and support can complete deferred archival using preserved paths
+TS-158 Validate recovery scenario where rollback to last stable package version in Orchestrator allows approved rerun after faulty package deployment
+TS-159 Validate FR-001 that solution reads the monthly Employee Master Excel file from approved source location using configured SourceFolderPath and InputFileName
+TS-160 Validate FR-008 that solution extracts all employee records from validated worksheet into in-memory DataTable in a single read operation
+TS-161 Validate FR-016 that solution detects duplicate EmployeeID values using grouped count or duplicate lookup dictionary/hashset
+TS-162 Validate FR-018 that solution identifies and isolates qualified employee records into io_QualifiedData dataset before output generation
+TS-163 Validate FR-021 that solution compiles execution summary counts, timings, and status details from io_RunMetrics accurately
+TS-164 Validate FR-022 and FR-023 that invalid records and processing exceptions are logged to exception artifacts and Orchestrator logs for audit and troubleshooting
+TS-165 Validate FR-025 and FR-026 that Outlook success and failure notifications are sent using wf_SendStatusEmail.xaml with configured recipients
+TS-166 Validate FR-027 that wf_ArchiveArtifacts.xaml archives source, report, summary, and exception files to ast_ESAR_ArchiveFolderPath with run-specific hierarchy
+TS-167 Validate FR-028 that solution supports rerun after corrected source data is provided through authorized manual trigger in PROD
+TS-168 Validate FR-029 that all invalid records are excluded from final qualified output regardless of salary value
+TS-169 Validate FR-031 that email delivery failures are retried or escalated according to ast_ESAR_MaxEmailRetryCount and support procedures
+TS-170 Validate FR-032 that unique RunId is generated per execution and propagated to logs, execution summary, exception log, email content, and archive path
+TS-171 Validate REFramework Init state loads config, assets, run metadata, validates directories, and initializes raw, valid, exception, duplicate, and qualified DataTables
+TS-172 Validate REFramework Get Transaction Data state returns each non-blank DataRow sequentially and terminates cleanly when no more transactions remain
+TS-173 Validate REFramework Process Transaction state invokes wf_ValidateEmployeeRecord, wf_CheckDuplicateEmployee, wf_ApplySalaryRule, and wf_AddToQualifiedDataset in correct order
+TS-174 Validate REFramework Set Transaction Status state increments counts and marks Business Exception versus System Exception outcomes correctly
+TS-175 Validate REFramework End Process state generates outputs, sends notification, archives artifacts, and invokes CloseAllApplications cleanup
+TS-176 Validate that queue design is not used and transaction items are managed in-memory without Orchestrator Queue dependency for current scope
+TS-177 Validate asset-driven configuration by changing ast_ESAR_SalaryThreshold in non-production and confirming salary qualification uses configured threshold without code change
+TS-178 Validate asset-driven configuration by changing ast_ESAR_InputFileName in non-production and confirming input file validation respects updated expected file name
+TS-179 Validate asset-driven configuration by changing ast_ESAR_WorksheetName in non-production and confirming workbook validation uses configured worksheet name
+TS-180 Validate asset-driven configuration by changing ast_ESAR_SuccessRecipients and ast_ESAR_FailureRecipients and confirming emails are sent only to updated configured recipients
+TS-181 Validate asset-driven configuration by changing ast_ESAR_ArchiveFolderPath and confirming archive artifacts are created in the configured root path
+TS-182 Validate NFR-002 and success criteria that salary qualification accuracy is 100 percent for mixed above-threshold, equal-threshold, and below-threshold records
+TS-183 Validate NFR-003 graceful exception handling by confirming business exceptions do not terminate process and system exceptions terminate or retry according to design
+TS-184 Validate NFR-004 and audit requirements that every run produces complete execution and exception logs sufficient for troubleshooting and audit review
+TS-185 Validate NFR-005 and NFR-012 supportability through clear error messages, failed step identification, and rerun readiness for Support Team
+TS-186 Validate NFR-006 standardized process logic by running same input file in repeated executions and confirming consistent report and summary outputs
+TS-187 Validate NFR-007 and NFR-010 scalability with 10000 plus rows and stable in-memory processing without degradation beyond agreed threshold
+TS-188 Validate NFR-008 protection of sensitive HR data at rest and in transit across source, output, email, log, and archive handling
+TS-189 Validate NFR-009 sufficient logging detail by confirming support can trace each failure and each output artifact using RunId and workflow context
+TS-190 Validate monitoring and alerting where job failed, input file missing, output generation failed, email failure after retries, and archive failure after retries create operational alerts
+TS-191 Validate SLA monitoring that notification is sent within 5 minutes of process completion under expected conditions
+TS-192 Validate archive folder structure uses configured ArchiveSubfolderPattern {yyyy}\{MM}\{RunId} and preserves run-specific traceability
+TS-193 Validate exception log generation as Excel file when configured for business/support review and confirm content is readable and complete
+TS-194 Validate report generation using workbook or modern Excel activities without visible UI dependency in unattended runtime
+TS-195 Validate output generation when qualified dataset is empty but process still creates execution summary and appropriate final status without report content errors
+TS-196 Validate that records with Salary greater than 50000 but invalid mandatory fields are excluded due to validation precedence over business rule processing
+TS-197 Validate that records with valid data and duplicate EmployeeID are classified as Business Exception Duplicate before salary qualification is applied
+TS-198 Validate that TotalRowsRead, BlankRowsIgnored, ValidRowsProcessed, QualifiedRows, InvalidRows, DuplicateRows, and ExceptionCount calculations remain accurate across mixed datasets
+TS-199 Validate that Support Team manual rerun permission is enabled only in PROD and not exposed to unauthorized business users
+TS-200 Validate that failure email content includes RunId, failed step, error summary, and artifact location when applicable as defined in monitoring design
