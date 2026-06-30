@@ -302,17 +302,13 @@ Human approval is maintained at critical stages using Human-in-the-Loop governan
 
 
 
-1\. Clone this agentic floe into studio.
-
-2\. Import the solution into your UiPath Automation Cloud organization.
-
-3\. Publish all agents to Orchestrator.
+1\. open SDLC- Foundry Agentic flow in web Studio.
 
 4\. Configure Maestro workflow.
 
-5\. Upload a ZIP package containing BRD, SOP, Transcript, and Supporting Documents.
+5\. Upload all Input files from git repo BRD, SOP, Transcript, and Supporting Documents.
 
-6\. Start the Maestro workflow.
+6\. Start the Maestro workflow BPMN.
 
 7\. Review each AI-generated artifact.
 
